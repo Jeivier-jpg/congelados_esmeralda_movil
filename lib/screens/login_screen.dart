@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:congelados_esmeralda_movil/screens/home_screen.dart';
+import 'package:congelados_esmeralda_movil/screens/registro_screen.dart';
+import 'package:congelados_esmeralda_movil/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,7 +13,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _correo = TextEditingController();
   final _contrasena = TextEditingController();
+  final _auth = AuthService();
   bool _ocultar = true;
+  bool _cargando = false;
   String? _error;
 
   @override
@@ -21,18 +25,39 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _ingresar() {
-    final correo = _correo.text.trim();
-    if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(correo)) {
-      setState(() => _error = 'Ingresa un correo válido');
-      return;
-    }
-    if (_contrasena.text.length < 6) {
-      setState(() => _error = 'La contraseña debe tener al menos 6 caracteres');
+  Future<void> _ingresar() async {
+    if (_cargando) return;
+    setState(() {
+      _cargando = true;
+      _error = null;
+    });
+    final error = await _auth.iniciarSesion(_correo.text, _contrasena.text);
+    if (!mounted) return;
+    if (error != null) {
+      setState(() {
+        _cargando = false;
+        _error = error;
+      });
       return;
     }
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const HomeScreen()));
+  }
+
+  /// Abre el registro; si se creó la cuenta, vuelve con el correo registrado.
+  Future<void> _irARegistro() async {
+    final correo = await Navigator.of(context).push<String>(
+        MaterialPageRoute(builder: (_) => const RegistroScreen()));
+    if (!mounted || correo == null) return;
+    setState(() {
+      _correo.text = correo;
+      _contrasena.clear();
+      _error = null;
+    });
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(
+          content: Text('Cuenta creada. Ingresa con tu contraseña')));
   }
 
   void _proximamente(String que) {
@@ -165,14 +190,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   height: 50,
                   child: FilledButton(
-                    onPressed: _ingresar,
+                    onPressed: _cargando ? null : _ingresar,
                     style: FilledButton.styleFrom(
                       backgroundColor: const Color(0xFF4B0082),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    child: const Text('Ingresar',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: _cargando
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: Colors.white),
+                          )
+                        : const Text('Ingresar',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ),
                 const SizedBox(height: 18),
@@ -211,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 120),
                 Center(
                   child: GestureDetector(
-                    onTap: () => _proximamente('Crear cuenta'),
+                    onTap: _irARegistro,
                     child: const Text.rich(
                       TextSpan(
                         text: '¿No tienes cuenta? ',

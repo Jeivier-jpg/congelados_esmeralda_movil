@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:congelados_esmeralda_movil/screens/home_screen.dart';
+import 'package:congelados_esmeralda_movil/screens/splash_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: SplashScreen(),
     );
   }
 }
