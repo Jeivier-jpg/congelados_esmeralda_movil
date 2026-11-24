@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:congelados_esmeralda_movil/models/producto.dart';
+import 'package:congelados_esmeralda_movil/services/carrito_service.dart';
 
 class DetalleProductoScreen extends StatefulWidget {
   final Producto producto;
@@ -36,11 +37,14 @@ class _DetalleProductoScreenState extends State<DetalleProductoScreen> {
   }
 
   void _agregar() {
+    final enCarrito =
+        CarritoService.instancia.agregar(p, cantidad: cantidad);
     final messenger = ScaffoldMessenger.of(context);
     messenger
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
-        content: Text('$cantidad × ${p.nombre} agregado al carrito'),
+        content: Text(
+            '$cantidad × ${p.nombre} agregado al carrito (llevas $enCarrito)'),
         duration: const Duration(seconds: 2),
       ));
     Navigator.of(context).pop();

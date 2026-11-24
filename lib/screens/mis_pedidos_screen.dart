@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:congelados_esmeralda_movil/screens/carrito_screen.dart';
 import 'package:congelados_esmeralda_movil/models/pedido.dart';
 import 'package:congelados_esmeralda_movil/screens/catalogo_screen.dart';
 import 'package:congelados_esmeralda_movil/screens/home_screen.dart';
@@ -141,6 +142,9 @@ class _MisPedidosScreenState extends State<MisPedidosScreen> {
         } else if (i == 1) {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const CatalogoScreen()));
+        } else if (i == 3) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const CarritoScreen()));
         }
       },
       backgroundColor: Colors.white,
