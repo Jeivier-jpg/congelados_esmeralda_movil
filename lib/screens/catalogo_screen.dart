@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:congelados_esmeralda_movil/models/producto.dart';
 import 'package:congelados_esmeralda_movil/screens/detalle_producto_screen.dart';
+import 'package:congelados_esmeralda_movil/screens/home_screen.dart';
 import 'package:congelados_esmeralda_movil/widgets/producto_card.dart';
 
 class CatalogoScreen extends StatefulWidget {
@@ -97,6 +98,13 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: 1,
+      onTap: (i) {
+        // Inicio
+        if (i == 0) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const HomeScreen()));
+        }
+      },
       backgroundColor: Colors.white,
       selectedItemColor: const Color(0xFF4B0082),
       unselectedItemColor: const Color(0xFF928EB9),

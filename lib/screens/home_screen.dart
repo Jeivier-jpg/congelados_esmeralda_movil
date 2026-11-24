@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:congelados_esmeralda_movil/models/producto.dart';
+import 'package:congelados_esmeralda_movil/screens/catalogo_screen.dart';
+import 'package:congelados_esmeralda_movil/screens/detalle_producto_screen.dart';
 import 'package:congelados_esmeralda_movil/widgets/producto_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -133,7 +135,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _barraInferior() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      currentIndex: 1,
+      currentIndex: 0,
+      onTap: (i) {
+        // Catálogo
+        if (i == 1) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const CatalogoScreen()));
+        }
+      },
       backgroundColor: Colors.white,
       selectedItemColor: const Color(0xFF4B0082),
       unselectedItemColor: const Color(0xFF928EB9),
@@ -178,8 +187,14 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisSpacing: 12,
               childAspectRatio: 0.6,
             ),
-            itemBuilder: (context, index) =>
-                ProductoCard(producto: lista[index]),
+            itemBuilder: (context, index) {
+              final p = lista[index];
+              return GestureDetector(
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => DetalleProductoScreen(producto: p))),
+                child: ProductoCard(producto: p),
+              );
+            },
           ),
           const SizedBox(height: 20),
         ],
