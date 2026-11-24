@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:congelados_esmeralda_movil/models/item_carrito.dart';
-import 'package:congelados_esmeraldamovil/models/producto.dart';
+import 'package:congelados_esmeralda_movil/models/producto.dart';
 
 /// Carrito compartido por toda la app (se guarda en memoria).
 /// Las pantallas lo escuchan con ListenableBuilder para redibujarse solas.
 class CarritoService extends ChangeNotifier {
-  CarritoService.();
+  CarritoService._();
   static final CarritoService instancia = CarritoService._();
 
   /// Máximo de unidades de un mismo producto por pedido.

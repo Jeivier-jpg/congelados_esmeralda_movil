@@ -10,5 +10,5 @@ String formatearPrecio(int valor) {
     if (i > 0 && (s.length - i) % 3 == 0) buffer.write('.');
     buffer.write(s[i]);
   }
-  return '$$buffer';
+  return '\$$buffer';
 }
